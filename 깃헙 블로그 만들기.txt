@@ -1,0 +1,18 @@
+[마크다운 문법정리]
+https://devyurim.github.io/development%20environment/github%20blog/2018/01/01/blog-3.html
+
+
+
+
+[깃허브에 올린 소스의 한글부분이 깨진다면]
+
+
+git bash를 열어서 인코딩을 변경
+
+$git config --global gui.encoding utf-8
+
+출처: https://nocount.tistory.com/213 [오류노트]
+
+
+[블로그 제목 바꾸기]
+config.yml변경
