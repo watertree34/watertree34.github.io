@@ -2,8 +2,8 @@
 layout: post
 title: "첫 포스팅"
 ---
-#### 1. 컴포넌트의 이해
-[네이버로 가기](https://www.naver.com)유니티 컴포넌트의 개념은~~~이다
+#### 1. abcd
+[abcd](https://www.naver.com)abcd
 
 #### Quick-Start Guide
 
