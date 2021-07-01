@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Getting Started"
+title: "첫 포스팅"
 ---
-
-This is a portfolio Jekyll theme built from the ground up, using the [DevTips Starter Kit](http://devtipsstarterkit.com/) as a foundation for starting, and following closely the amazing tutorial by [Travis Neilson over at DevTips](https://www.youtube.com/watch?v=T6jKLsxbFg4&list=PL0CB3OvPhDA_STygmp3sDenx3UpdOMk7P). For a guide on how to start a blog or personal website using Jekyll and GitHub Pages, please check out [this article](https://hungryminds.ca/how-to-start-a-blog-or-personal-website-using-jekyll-and-github-pages/).
+#### 1. 컴포넌트의 이해
+[네이버로 가기](https://www.naver.com)유니티 컴포넌트의 개념은~~~이다
 
 #### Quick-Start Guide
 
