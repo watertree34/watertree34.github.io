@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug.Log(노하영); | Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            // CSS 변수를 바인딩하여 테마 변경 시 실시간으로 연동되도록 설정
+                            blue: 'var(--primary)',
+                            purple: 'var(--secondary)',
+                            dark: '#212529',
+                            grayBg: '#F8F9FA',
+                            textMuted: '#6C757D'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                        poppins: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 기본 테마: Cyber Blue & Purple */
+        :root {
+            --primary: #00D2FF;
+            --secondary: #8A2BE2;
+            --primary-glow: rgba(0, 210, 255, 0.3);
+            --secondary-glow: rgba(138, 43, 226, 0.2);
+        }
+        /* 변경 테마: Sunset Coral & Gold */
+        body[data-theme="sunset"] {
+            --primary: #FF5E62;
+            --secondary: #FF9966;
+            --primary-glow: rgba(255, 94, 98, 0.3);
+            --secondary-glow: rgba(255, 153, 102, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #FFFFFF;
+            color: #212529;
+            transition: background-color 0.3s ease;
+        }
+        /* Custom Glowing and Text Gradients */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            transition: all 0.3s ease;
+        }
+        /* Interactive floating blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.12;
+            pointer-events: none;
+            transition: background-color 0.5s ease;
+        }
+        
+        /* Smooth scale and transition adjustments */
+        .card-transition {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* Title Hover Animation */
+        .title-hover {
+            transition: all 0.3s ease;
+        }
+        .title-hover:hover {
+            transform: scale(1.03) translateY(-2px);
+            text-shadow: 0 0 20px var(--primary-glow), 0 0 30px var(--secondary-glow);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden" data-theme="cyber">
+
+    <!-- Background Blobs -->
+    <div class="blob w-[500px] h-[500px] bg-brand-blue top-[-100px] right-[-100px]"></div>
+    <div class="blob w-[600px] h-[600px] bg-brand-purple top-[600px] left-[-200px]"></div>
+    <div class="blob w-[500px] h-[500px] bg-brand-blue bottom-[1000px] right-[-100px]"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="font-mono text-xl md:text-2xl font-bold tracking-tight text-brand-dark title-hover">
+                Debug.Log(<span class="gradient-text">노하영</span>);
+            </a>
+            
+            <div class="flex items-center space-x-4 md:space-x-8">
+                <!-- Color Theme Switcher -->
+                <div class="flex items-center space-x-2 bg-gray-100 p-1.5 rounded-full border border-gray-200/60 shadow-inner">
+                    <button onclick="changeTheme('cyber')" id="btn-theme-cyber" class="w-5 h-5 rounded-full bg-gradient-to-r from-[#00D2FF] to-[#8A2BE2] focus:outline-none transition-all duration-200 transform scale-110 ring-2 ring-offset-1 ring-gray-400" title="사이버 블루 테마"></button>
+                    <button onclick="changeTheme('sunset')" id="btn-theme-sunset" class="w-5 h-5 rounded-full bg-gradient-to-r from-[#FF5E62] to-[#FF9966] focus:outline-none transition-all duration-200 transform hover:scale-105" title="선셋 코랄 테마"></button>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                    <a href="#about" class="text-brand-dark hover:text-brand-blue transition">About</a>
+                    <a href="#philosophy" class="text-brand-dark hover:text-brand-blue transition">Philosophy</a>
+                    <a href="#skills" class="text-brand-dark hover:text-brand-blue transition">Skills</a>
+                    <a href="#works" class="text-brand-dark hover:text-brand-purple transition">Works</a>
+                    <a href="#contact" class="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-opacity-90 transition shadow-sm">Contact</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-brand-dark focus:outline-none" id="menu-btn">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div class="hidden bg-white border-b border-gray-100 px-6 py-4 space-y-3 md:hidden font-medium" id="mobile-menu">
+            <a href="#about" class="block text-brand-dark hover:text-brand-blue">About</a>
+            <a href="#philosophy" class="block text-brand-dark hover:text-brand-blue">Philosophy</a>
+            <a href="#skills" class="block text-brand-dark hover:text-brand-blue">Skills</a>
+            <a href="#works" class="block text-brand-dark hover:text-brand-purple">Works</a>
+            <a href="#contact" class="block text-brand-dark hover:text-brand-blue">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="relative min-h-[calc(100vh-80px)] flex items-center bg-white px-6">
+        <div class="max-w-5xl mx-auto w-full py-16 md:py-24 text-center md:text-left">
+            <div class="inline-flex items-center space-x-2 bg-gray-50 border border-gray-100 px-4 py-2 rounded-full mb-6 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+                <span class="font-poppins font-semibold text-xs tracking-wider text-brand-purple uppercase">Developer Portfolio</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-brand-dark mb-4 font-poppins leading-tight">
+                Debug.Log(<span class="gradient-text title-hover inline-block cursor-default">노하영</span>);
+            </h1>
+            
+            <!-- Typing Effect Subtitle (레이아웃 흔들림 방지를 위해 최소 높이 설정) -->
+            <p class="font-mono text-xl md:text-2xl font-semibold text-brand-purple mb-8 tracking-wide min-h-[36px]">
+                // <span id="typing-text"></span><span class="animate-pulse text-brand-blue font-bold ml-0.5">|</span>
+            </p>
+            
+            <div class="max-w-3xl border-l-4 border-brand-blue pl-6 md:pl-8 my-8 py-2">
+                <p class="text-lg sm:text-xl md:text-2xl text-gray-700 font-normal leading-relaxed break-keep">
+                    Digital Transformation, XR, 게임, 그래픽스, 메타버스 등의 IT기술로 다양한 문제를 해결하여 세상에 도움이 되고싶은 개발자입니다.
+                </p>
+            </div>
+            
+            <div class="mt-12 flex flex-wrap justify-center md:justify-start gap-4">
+                <a href="#works" class="px-8 py-4 rounded-xl gradient-bg text-white font-semibold shadow-lg shadow-purple-200 hover:opacity-95 transform hover:-translate-y-0.5 transition duration-200">
+                    프로젝트 보기 <i class="fa-solid fa-arrow-down ml-2"></i>
+                </a>
+                <a href="#contact" class="px-8 py-4 rounded-xl bg-brand-dark text-white font-semibold shadow-md hover:bg-opacity-90 transform hover:-translate-y-0.5 transition duration-200">
+                    컨택하기
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="py-24 bg-brand-grayBg px-6 border-t border-b border-gray-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center md:text-left mb-16">
+                <p class="text-xs font-bold tracking-widest text-brand-blue uppercase mb-2">Core Value</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark">개발 철학</h2>
+                <div class="w-12 h-1 bg-brand-purple mt-4 rounded-full mx-auto md:mx-0"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 card-transition hover:shadow-md hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-brand-dark flex items-center">
+                        <span class="text-sm font-mono text-brand-purple mr-2">01.</span> 개발 전
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed break-keep">
+                        프로그램의 전체적인 그림을 그리고 다각도로 생각하며 설계합니다.
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 card-transition hover:shadow-md hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-brand-purple flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-code-branch"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-brand-dark flex items-center">
+                        <span class="text-sm font-mono text-brand-purple mr-2">02.</span> 개발 중
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed break-keep">
+                        큰 부분 뿐 아니라 디테일한 부분도 최적의 결과를 만들기위해 고민하며 구현합니다.
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 card-transition hover:shadow-md hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-500 flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-arrow-up-right-dots"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-brand-dark flex items-center">
+                        <span class="text-sm font-mono text-brand-purple mr-2">03.</span> 개발 후
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed break-keep">
+                        작성한 코드를 검토하고 부족한 부분을 성찰하여 개선하며 성장합니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="skills" class="py-24 bg-white px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-xs font-bold tracking-widest text-brand-purple uppercase mb-2">Capabilities</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark mb-4">기술 스택</h2>
+            <div class="w-12 h-1 bg-brand-blue mt-2 mb-12 rounded-full mx-auto"></div>
+            
+            <div class="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
+                <div class="px-6 py-3.5 bg-blue-50 text-blue-700 rounded-2xl font-medium text-base shadow-sm border border-blue-100/50 hover:scale-105 transition transform duration-200">
+                    <i class="fa-brands fa-unity mr-2 text-lg"></i> C# (Unity)
+                </div>
+                <div class="px-6 py-3.5 bg-amber-50 text-amber-700 rounded-2xl font-medium text-base shadow-sm border border-amber-100/50 hover:scale-105 transition transform duration-200">
+                    <i class="fa-brands fa-python mr-2 text-lg"></i> Python (Open CV)
+                </div>
+                <div class="px-6 py-3.5 bg-purple-50 text-purple-700 rounded-2xl font-medium text-base shadow-sm border border-purple-100/50 hover:scale-105 transition transform duration-200">
+                    <i class="fa-solid fa-cubes mr-2 text-lg"></i> C++ (Open GL)
+                </div>
+                <div class="px-6 py-3.5 bg-red-50 text-red-700 rounded-2xl font-medium text-base shadow-sm border border-red-100/50 hover:scale-105 transition transform duration-200">
+                    <i class="fa-brands fa-git-alt mr-2 text-lg"></i> Git
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Works & Activities Section -->
+    <section id="works" class="py-24 bg-brand-grayBg px-6 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="text-xs font-bold tracking-widest text-brand-blue uppercase mb-2">Portfolio</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark">주요 활동 및 프로젝트</h2>
+                <div class="w-12 h-1 bg-brand-purple mt-4 rounded-full mx-auto"></div>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Project 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2024.05 ~ 2025.12</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-blue transition">
+                            Digital Twin기반의 생산공장 모니터링 시스템 구축 프로젝트<br><span class="text-sm font-normal text-gray-500 font-mono">(FMCS_Layout3D)</span>
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            LG Energy Solution 배터리 공장들의 FMCS_Layout3D 프로젝트 구축 및 확산 (LG CNS 상주 프리랜서)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">PC</span>
+                            <span class="px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md text-xs font-medium">REST API</span>
+                            <span class="px-2.5 py-1 bg-cyan-50 text-cyan-600 rounded-md text-xs font-medium">Streaming Data</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2023.04 ~ 2023.07</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-purple transition">
+                            [밀크T초등] 메타월드
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            밀크T의 캐릭터들이 모여 살고 있는 메타월드 섬에서 캐릭터와 학습생간의 소통과 학습이 이루어지는 게이미피케이션 앱 (천재교육 미디어부문 Unity팀)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-md text-xs font-medium">Photon</span>
+                            <span class="px-2.5 py-1 bg-green-50 text-green-600 rounded-md text-xs font-medium">Android</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2022.01 ~ 2022.05</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-blue transition">
+                            Arcana
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            모바일 컨트롤러를 활용한 감성 어드벤처 PC 게임 (숭실대학교 글로벌미디어학부 졸업프로젝트)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-md text-xs font-medium">Photon</span>
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">PC</span>
+                            <span class="px-2.5 py-1 bg-green-50 text-green-600 rounded-md text-xs font-medium">Android</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2021.09 ~ 2021.12</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-purple transition">
+                            메타버스 프로젝트
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            메타버스 안드로이드 어플리케이션 프로젝트 내 REST API 연동, AI 모션 캡쳐, UI/UX 개발 (ICT 학점연계 프로젝트 인턴십)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-green-50 text-green-600 rounded-md text-xs font-medium">Android</span>
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">PC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2020.12 ~ 2021.08</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-blue transition">
+                            스마트 미러를 이용한 AR 기반 헬스케어 개발 프로젝트
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            거울 속 트레이너를 따라하고 AI 트레이너의 코치를 받으며 운동하는 AR 기반 스마트 헬스케어 서비스 (GSC LAB 학부연구생)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">PC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2021.06 ~ 2021.06</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-purple transition">
+                            조경 설계 프로그램
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            마당에 오브젝트를 배치하며 설계하는 조경 설계 프로그램 (그래픽스 프로그래밍 과제)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md text-xs font-medium">Open GL</span>
+                            <span class="px-2.5 py-1 bg-red-50 text-red-600 rounded-md text-xs font-medium">C++</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 7 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span><i class="fa-regular fa-calendar mr-1"></i> 2021.06 ~ 2021.06</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-3 break-keep leading-snug group-hover:text-brand-blue transition">
+                            AR 제스쳐 그림판
+                        </h3>
+                        <p class="card-desc text-gray-600 text-sm leading-relaxed mb-6 break-keep">
+                            제스쳐를 통해 색을 바꾸며 그릴 수 있는 AR 그림판 (영상처리 과제)
+                        </p>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-md text-xs font-medium">Open CV</span>
+                            <span class="px-2.5 py-1 bg-yellow-50 text-yellow-600 rounded-md text-xs font-medium">Python</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 8 (RAPA Series) -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-transition hover:shadow-xl hover:-translate-y-2 lg:col-span-2 flex flex-col justify-between cursor-pointer group" onclick="openModal(this)">
+                    <div class="p-8">
+                        <div class="card-period flex items-center justify-between text-xs text-brand-textMuted font-mono mb-4">
+                            <span class="text-brand-purple font-semibold"><i class="fa-solid fa-layer-group mr-1"></i> 단기 프로젝트 세트</span>
+                            <span>2020.05 ~ 2020.09</span>
+                        </div>
+                        <h3 class="card-title text-xl font-bold text-brand-dark mb-4">
+                            VR/AR 단기 프로젝트 세트 <span class="text-sm font-normal text-brand-textMuted">(RAPA XR콘텐츠 개발자 과정)</span>
+                        </h3>
+                        
+                        <div class="card-desc grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 text-sm">
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="font-bold text-brand-dark mb-0.5">Tale Village</div>
+                                <div class="text-xs font-mono text-brand-purple mb-1">2020.08 ~ 2020.09</div>
+                                <p class="text-gray-600 text-xs">VR 동화 체험 게임 콘텐츠 (Oculus, Unity)</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="font-bold text-brand-dark mb-0.5">Exodus</div>
+                                <div class="text-xs font-mono text-brand-purple mb-1">2020.07 ~ 2020.08</div>
+                                <p class="text-gray-600 text-xs">VR 공포 게임 콘텐츠 (Unity, Oculus, PC)</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="font-bold text-brand-dark mb-0.5">RunAway</div>
+                                <div class="text-xs font-mono text-brand-purple mb-1">2020.06 ~ 2020.06</div>
+                                <p class="text-gray-600 text-xs">PC 레이싱 게임 (Unity, PC)</p>
+                            </div>
+                            <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="font-bold text-brand-dark mb-0.5">DeepSleep</div>
+                                <div class="text-xs font-mono text-brand-purple mb-1">2020.05 ~ 2020.06</div>
+                                <p class="text-gray-600 text-xs">장애물 피하기 게임 (Unity, PC)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-8 pb-8">
+                        <div class="card-tags flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-xs font-medium">Unity</span>
+                            <span class="px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md text-xs font-medium">Oculus VR</span>
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 rounded-md text-xs font-medium">PC Game</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-white px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-xs font-bold tracking-widest text-brand-blue uppercase mb-2">Get In Touch</p>
+            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-brand-dark mb-4">Contact</h2>
+            <div class="w-12 h-1 bg-brand-purple mt-2 mb-12 rounded-full mx-auto"></div>
+            
+            <p class="text-gray-600 max-w-md mx-auto mb-8 break-keep">
+                Digital Transformation 및 XR/게임 개발에 관한 협업이나 문의사항이 있으시다면 언제든 연락해 주세요!
+            </p>
+            
+            <div class="inline-flex flex-col sm:flex-row items-center justify-center gap-6 bg-brand-grayBg p-6 rounded-2xl border border-gray-100">
+                <a href="mailto:your-email@example.com" class="flex items-center space-x-3 text-brand-dark hover:text-brand-purple font-medium transition">
+                    <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-purple">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <span>이메일 보내기</span>
+                </a>
+                <div class="hidden sm:block w-px h-6 bg-gray-200"></div>
+                <a href="#" target="_blank" class="flex items-center space-x-3 text-brand-dark hover:text-brand-blue font-medium transition">
+                    <div class="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-brand-blue">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+                    <span>GitHub 방문하기</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm modal-close cursor-pointer"></div>
+        
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300" id="modal-panel">
+            
+            <button class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition modal-close">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="p-8 md:p-10 mt-4">
+                <div id="modal-tags" class="flex flex-wrap gap-1.5 mb-4"></div>
+                <h3 id="modal-title" class="text-2xl md:text-3xl font-bold text-brand-dark mb-2"></h3>
+                <div id="modal-period" class="text-sm font-mono text-brand-textMuted mb-8"></div>
+                
+                <div class="w-full h-px bg-gray-100 mb-8"></div>
+                
+                <div id="modal-desc" class="text-gray-700 leading-relaxed text-lg break-keep mb-8"></div>
+                
+                <div class="bg-brand-grayBg p-6 rounded-xl border border-gray-100 mt-8">
+                    <h4 class="font-bold text-brand-dark mb-3"><i class="fa-solid fa-circle-info text-brand-blue mr-2"></i>상세 내용 및 성과</h4>
+                    <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
+                        <li>이곳에 본인이 담당했던 주요 역할(Role)을 추가해 보세요.</li>
+                        <li>개발 중 마주했던 문제와 해결 과정(Troubleshooting)을 적으면 좋습니다.</li>
+                        <li>프로젝트 스크린샷이나 시연 영상 링크를 넣어도 훌륭합니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-white py-12 px-6 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between font-poppins text-sm text-gray-400">
+            <p class="font-mono text-lg font-bold text-white mb-4 md:mb-0">
+                Debug.Log(<span class="text-brand-blue">노하영</span>);
+            </p>
+            <p>© 2026 Noh Hayoung. Powered by Tailwind CSS.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 1. Theme Switcher Logic
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            
+            const btnCyber = document.getElementById('btn-theme-cyber');
+            const btnSunset = document.getElementById('btn-theme-sunset');
+            
+            if (theme === 'cyber') {
+                btnCyber.classList.add('ring-2', 'ring-offset-1', 'ring-gray-400', 'scale-110');
+                btnSunset.classList.remove('ring-2', 'ring-offset-1', 'ring-gray-400', 'scale-110');
+            } else {
+                btnSunset.classList.add('ring-2', 'ring-offset-1', 'ring-gray-400', 'scale-110');
+                btnCyber.classList.remove('ring-2', 'ring-offset-1', 'ring-gray-400', 'scale-110');
+            }
+        }
+
+        // 2. Typing Effect Logic
+        const typingText = document.getElementById('typing-text');
+        // 원하는 키워드나 문구를 배열로 넣어두면 순서대로 타이핑됩니다.
+        const phrases = ["Subtitle: Unity Developer", "Subtitle: XR & Metaverse Explorer", "Subtitle: Creative Problem Solver"];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIdx];
+            
+            if (isDeleting) {
+                typingText.textContent = currentPhrase.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typingText.textContent = currentPhrase.substring(0, charIdx + 1);
+                charIdx++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80; // 지울 때 속도를 조금 더 빠르게 설정
+
+            // 한 단어가 완성되었을 때 대기
+            if (!isDeleting && charIdx === currentPhrase.length) {
+                typeSpeed = 2200; // 머무르는 시간 (2.2초)
+                isDeleting = true;
+            } 
+            // 단어가 다 지워졌을 때 다음 단어로 전환
+            else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                typeSpeed = 400; // 타이핑 시작 전 대기 시간
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        // 초기 시작 실행 순서 정의
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(type, 1000); // 첫 진입 후 1초 뒤 타이핑 시작
+        });
+
+        // 3. Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 4. Modal Logic
+        function openModal(cardElement) {
+            const modal = document.getElementById('project-modal');
+            const modalPanel = document.getElementById('modal-panel');
+            
+            const title = cardElement.querySelector('.card-title').innerHTML;
+            const period = cardElement.querySelector('.card-period').innerHTML;
+            const desc = cardElement.querySelector('.card-desc').innerHTML;
+            const tags = cardElement.querySelector('.card-tags').innerHTML;
+            
+            document.getElementById('modal-title').innerHTML = title;
+            document.getElementById('modal-period').innerHTML = period;
+            document.getElementById('modal-desc').innerHTML = desc;
+            document.getElementById('modal-tags').innerHTML = tags;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalPanel.classList.remove('scale-95');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            const modalPanel = document.getElementById('modal-panel');
+            
+            modal.classList.add('opacity-0');
+            modalPanel.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = 'auto'; 
+            }, 300);
+        }
+
+        document.querySelectorAll('.modal-close').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+    </script>
+</body>
+</html>
