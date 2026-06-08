@@ -91,7 +91,7 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
 }
 .hero-subtitle { color: var(--accent); font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;}
 .hero-title { font-size: 3.5rem; margin-bottom: 24px; letter-spacing: -0.02em; }
-.hero-desc { color: var(--text-secondary); font-size: 1.2rem; max-width: 600px; margin-bottom: 40px; }
+.hero-desc { color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 40px; }
 .hero-cta { display: flex; gap: 16px; }
 
 /* Core Strengths (Cards) */
