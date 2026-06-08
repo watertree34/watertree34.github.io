@@ -1,3 +1,5 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
+
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Scroll Reveal Animation
     const revealElements = document.querySelectorAll(".reveal");
@@ -207,4 +209,188 @@ document.addEventListener("DOMContentLoaded", () => {
             closeModal();
         }
     });
+
+    // 5. Hero 3D Widget
+    const initThreeHero = () => {
+        const rootElement = document.getElementById('hero-app');
+        if (!rootElement) return;
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'hero-canvas';
+        canvas.setAttribute('aria-hidden', 'true');
+        rootElement.appendChild(canvas);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, rootElement.clientWidth / rootElement.clientHeight, 0.1, 1000);
+        camera.position.set(0, 0, 5.2);
+
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x000000, 0);
+
+        const ambient = new THREE.HemisphereLight(0xf0f8ff, 0xc6d8f5, 0.95);
+        const directional = new THREE.DirectionalLight(0xffffff, 1.1);
+        directional.position.set(5, 6, 5);
+        scene.add(ambient, directional);
+
+        const material = new THREE.MeshPhysicalMaterial({
+            color: 0xe9f1f8,
+            metalness: 0.4,
+            roughness: 0.15,
+            clearcoat: 1,
+            clearcoatRoughness: 0.05,
+            transmission: 0.35,
+            opacity: 0.92,
+            transparent: true,
+        });
+
+        const geometry = new THREE.TorusKnotGeometry(0.95, 0.28, 140, 20);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const glow = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(0.58, 3),
+            new THREE.MeshStandardMaterial({
+                color: 0xc7e4ff,
+                metalness: 0.82,
+                roughness: 0.18,
+                emissive: 0xbedcff,
+                emissiveIntensity: 0.2,
+                opacity: 0.8,
+                transparent: true,
+            })
+        );
+        scene.add(glow);
+
+        const halo = new THREE.Mesh(
+            new THREE.TorusGeometry(1.85, 0.05, 48, 160),
+            new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                metalness: 0.95,
+                roughness: 0.22,
+                opacity: 0.24,
+                transparent: true,
+            })
+        );
+        halo.rotation.x = Math.PI / 2;
+        halo.rotation.y = Math.PI / 4;
+        scene.add(halo);
+
+        const resize = () => {
+            const width = rootElement.clientWidth;
+            const height = rootElement.clientHeight;
+            if (!width || !height) return;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        };
+
+        const onPointerMove = (event) => {
+            const x = (event.clientX / window.innerWidth - 0.5) * 1.6;
+            const y = (event.clientY / window.innerHeight - 0.5) * 1.2;
+            mesh.rotation.x = y * 0.8;
+            mesh.rotation.y = x * 1.4;
+            glow.rotation.x = y * 0.9;
+            glow.rotation.y = x * 1.6;
+        };
+
+        const animate = () => {
+            mesh.rotation.x += 0.004;
+            mesh.rotation.y += 0.005;
+            halo.rotation.z += 0.0012;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        };
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('pointermove', onPointerMove);
+        resize();
+        animate();
+    };
+
+    // 6. Skill Cloud Widget
+    const initSkillCloud = () => {
+        const rootElement = document.getElementById('skill-cloud-root');
+        if (!rootElement) return;
+
+        const skills = [
+            'Unity', 'Three.js', 'XR', 'OpenCV', 'C++', 'Photon', 'REST API', 'Android', 'Computer Vision', 'Shader', '3D UI', 'Smart Mirror', 'AR', 'VR', 'Interactive Design'
+        ];
+
+        const nodes = skills.map((label) => {
+            const tag = document.createElement('div');
+            tag.className = 'skill-tag';
+            tag.textContent = label;
+            tag.style.top = `${10 + Math.random() * 70}%`;
+            tag.style.left = `${10 + Math.random() * 70}%`;
+            tag.dataset.phase = String(Math.random() * Math.PI * 2);
+            tag.dataset.speed = String(0.002 + Math.random() * 0.002);
+            tag.dataset.offset = String(10 + Math.random() * 12);
+            tag.dataset.base = String(0.95 + Math.random() * 0.2);
+            tag.style.transform = `translate(-50%, -50%) scale(${tag.dataset.base})`;
+            rootElement.appendChild(tag);
+            return tag;
+        });
+
+        rootElement.addEventListener('pointermove', (event) => {
+            const bounds = rootElement.getBoundingClientRect();
+            const mx = (event.clientX - bounds.left) / bounds.width;
+            const my = (event.clientY - bounds.top) / bounds.height;
+            nodes.forEach((tag, index) => {
+                const base = Number(tag.dataset.base) || 1;
+                const offsetX = (mx - 0.5) * (5 + index * 0.3);
+                const offsetY = (my - 0.5) * (5 + index * 0.3);
+                tag.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(${base * 1.02})`;
+            });
+        });
+
+        rootElement.addEventListener('pointerleave', () => {
+            nodes.forEach((tag) => {
+                const base = Number(tag.dataset.base) || 1;
+                tag.style.transform = `translate(-50%, -50%) scale(${base})`;
+            });
+        });
+
+        const animateCloud = () => {
+            nodes.forEach((tag) => {
+                const phase = Number(tag.dataset.phase) + Number(tag.dataset.speed);
+                const offset = Number(tag.dataset.offset);
+                tag.dataset.phase = String(phase);
+                const floatY = Math.sin(phase) * offset;
+                const base = Number(tag.dataset.base) || 1;
+                tag.style.transform = `translate(-50%, calc(-50% + ${floatY}px)) scale(${base})`;
+            });
+            requestAnimationFrame(animateCloud);
+        };
+
+        animateCloud();
+    };
+
+    // 7. Project Card Parallax
+    const initProjectParallax = () => {
+        const cards = document.querySelectorAll('.project-card');
+        if (!cards.length) return;
+
+        const updateParallax = () => {
+            cards.forEach((card) => {
+                const rect = card.getBoundingClientRect();
+                const progress = (rect.top + rect.height * 0.5) / window.innerHeight;
+                const clamp = (value, min, max) => Math.max(min, Math.min(value, max));
+                const offsetZ = clamp((0.5 - progress) * 52, -34, 34);
+                const tiltX = clamp((0.5 - progress) * 8, -8, 8);
+                const tiltY = clamp((progress - 0.5) * 6, -6, 6);
+                card.style.setProperty('--card-offset-z', `${offsetZ}px`);
+                card.style.setProperty('--card-offset-x', `${tiltX}deg`);
+                card.style.setProperty('--card-offset-yaw', `${tiltY}deg`);
+            });
+        };
+
+        window.addEventListener('scroll', updateParallax);
+        window.addEventListener('resize', updateParallax);
+        updateParallax();
+    };
+
+    initThreeHero();
+    initSkillCloud();
+    initProjectParallax();
 });
