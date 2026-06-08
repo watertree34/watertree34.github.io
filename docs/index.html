@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hayoung Noh | Digital Twin Engineer</title>
+<title>Hayoung Noh | 3D Developer Portfolio</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -22,21 +22,20 @@
     </nav>
 
     <header class="hero section-padding">
-	
-        <div class="container reveal">
-            <h2 class="hero-subtitle">Digital Twin Engineer</h2>
-            <h1 class="hero-title">
-                
-                <span class="text-gradient"> Digital Twin, XR, 3D Graphics 기술을 통해<br>
-				현실의 문제를 해결하고 새로운 가치를 만듭니다.</span><br>
-            </h1>
-            <p class="hero-desc">
-                실시간 데이터와 디지털 경험을 연결하여 사용자와 산업에 의미 있는 솔루션을 제공합니다.<br>
-				단순한 기능 구현을 넘어 시스템 구조, 사용자 경험, 유지보수성을 함께 고민합니다.
-            </p>
-            <div class="hero-cta">
-                <a href="#projects" class="btn btn-primary">프로젝트 보기</a>
-                <a href="#resume" class="btn btn-outline">이력서 보기</a>
+        <div class="container hero-grid reveal">
+            <div class="hero-copy">
+                <span class="hero-label">3D Creative Engineer</span>
+                <h1 class="hero-title">클레이, 메탈, 글래스 질감이 어우러진<br>밝고 트렌디한 3D 포트폴리오</h1>
+                <p class="hero-desc">실시간 상호작용과 입체적인 모션을 통해 3D 개발자 콘셉트를 반영한 포트폴리오 경험을 제공합니다.</p>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">프로젝트 보기</a>
+                    <a href="#skills" class="btn btn-outline">스킬 클라우드 보기</a>
+                </div>
+            </div>
+            <div class="hero-visual reveal">
+                <div class="hero-visual-frame">
+                    <div id="hero-app" class="hero-app"></div>
+                </div>
             </div>
         </div>
     </header>
@@ -67,6 +66,22 @@
                     <h3>Problem Solving</h3>
                     <p>무한 로딩, 배칭 최소화 등 실제 프로젝트에서 발생하는 성능 및 네트워크 예외 상황을 개선합니다.</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Skills</h2>
+                <p>활동적인 3D 태그 클라우드로 스킬셋을 표현합니다.</p>
+            </div>
+            <div class="skills-grid reveal">
+                <div class="skills-copy">
+                    <h3>Interactive 3D Skill Cloud</h3>
+                    <p>마우스 오버 시 반응하고 부드럽게 떠오르는 그래픽 태그로 3D 개발자 스킬을 시각화합니다.</p>
+                </div>
+                <div id="skill-cloud-root" class="skill-cloud-root"></div>
             </div>
         </div>
     </section>
@@ -320,6 +335,6 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
