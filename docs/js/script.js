@@ -81,6 +81,58 @@ document.addEventListener("DOMContentLoaded", () => {
             ],
             challenge: "Unity 클라이언트와 Computer Vision 기술을 자연스럽게 연결하는 로직 설계의 어려움.",
             solution: "영상처리 알고리즘(프레임 차 계산 등) 결과를 Unity 데이터로 파싱하여 실시간 인터랙션 요소로 시각화함."
+        },
+        project5: {
+            title: "스마트 미러 AR 헬스케어",
+            role: "XR Content Developer",
+            overview: "스마트 미러 기반 AR 헬스케어 콘텐츠로, 사용자 운동을 인식하고 실시간 피드백을 제공하여 몰입형 운동 경험을 구성했습니다.",
+            tech: "Unity, Computer Vision, Smart Mirror",
+            features: [
+                "운동 동작 감지 및 피드백 로직 구현",
+                "사용자 맞춤형 운동 흐름 설계",
+                "UI/UX 기반 콘텐츠 흐름과 동영상 재생 시스템 구축"
+            ],
+            challenge: "실시간 영상 처리 결과를 클라이언트에 안정적으로 전달하는 구조 설계가 필요했습니다.",
+            solution: "데이터 파이프라인을 단순화하고 텐서플로우 및 OpenCV 결과를 Unity 요소로 안정적으로 매핑했습니다."
+        },
+        project6: {
+            title: "조경 설계 프로그램",
+            role: "Graphics Programming",
+            overview: "C++/OpenGL 기반으로 마당에 오브젝트를 배치하면서 조경을 설계하는 인터랙티브 프로그램을 구현했습니다.",
+            tech: "C++, OpenGL",
+            features: [
+                "3D 오브젝트 배치 및 회전 기능 구현",
+                "사용자 입력 기반 인터랙션 설계",
+                "그래픽스 프로그래밍 과제 요구사항을 충족하는 렌더링 구조 구성"
+            ],
+            challenge: "그래픽스 파이프라인과 사용자 인터페이스의 균형을 맞추는 것이 중요했습니다.",
+            solution: "렌더링과 셀렉션 로직을 분리하여 유지보수성과 확장성을 확보했습니다."
+        },
+        project7: {
+            title: "AR 제스쳐 그림판",
+            role: "Computer Vision Developer",
+            overview: "손 제스처를 이용해 색상을 바꾸며 그릴 수 있는 AR 그림판을 영상처리 기반으로 구현했습니다.",
+            tech: "Python, OpenCV, AR",
+            features: [
+                "손 제스처 인식으로 브러시 색상 변경",
+                "AR 상에서 실시간 드로잉 인터랙션 구현",
+                "영상 처리 기반 입력 추적 로직 개발"
+            ],
+            challenge: "제스처의 안정적인 인식과 매끄러운 드로잉 경험을 동시에 구현하는 것이 과제였습니다.",
+            solution: "프레임 간 차이를 활용해 움직임을 필터링하고 입력 신호를 부드럽게 처리했습니다."
+        },
+        project8: {
+            title: "RAPA XR 단기 프로젝트 세트",
+            role: "XR Content Developer",
+            overview: "RAPA XR 콘텐츠 개발자 과정에서 VR/AR 단기 프로젝트 4종을 개발하며 XR 콘텐츠 제작 역량을 확장했습니다.",
+            tech: "Unity, Oculus VR, PC Game",
+            features: [
+                "Tale Village VR 동화 체험 콘텐츠 개발",
+                "Exodus VR 공포 게임 제작",
+                "RunAway PC 레이싱 게임 및 DeepSleep 장애물 피하기 게임 구현"
+            ],
+            challenge: "짧은 기간 내에 다양한 XR 콘텐츠를 안정적으로 완성해야 했습니다.",
+            solution: "프로젝트별 핵심 기능을 분리하고 반복 가능한 개발 패턴을 적용하여 일정을 관리했습니다."
         }
     };
 
@@ -90,45 +142,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.querySelector('.modal-close');
     const backdrop = document.querySelector('.modal-backdrop');
 
-    // 열기 로직
-    document.querySelectorAll('.modal-trigger').forEach(button => {
-        button.addEventListener('click', () => {
-            const id = button.getAttribute('data-id');
-            const data = projectData[id];
+    const openModalById = (id) => {
+        const data = projectData[id];
+        if (!data) return;
+
+        modalBody.innerHTML = `
+            <h2>${data.title}</h2>
+            <div class="role">${data.role}</div>
             
-            if(data) {
-                // 모달 내용 렌더링
-                modalBody.innerHTML = `
-                    <h2>${data.title}</h2>
-                    <div class="role">${data.role}</div>
-                    
-                    <div class="modal-section">
-                        <h4>Overview</h4>
-                        <p>${data.overview}</p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Tech Stack</h4>
-                        <p>${data.tech}</p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Key Features</h4>
-                        <ul>
-                            ${data.features.map(f => `<li>${f}</li>`).join('')}
-                        </ul>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Challenge & Solution</h4>
-                        <p><strong>문제:</strong> ${data.challenge}</p>
-                        <p><strong>해결:</strong> ${data.solution}</p>
-                    </div>
-                `;
-                
-                modal.classList.add('active');
-                document.body.classList.add('modal-open'); // 스크롤 방지
-            }
+            <div class="modal-section">
+                <h4>Overview</h4>
+                <p>${data.overview}</p>
+            </div>
+            
+            <div class="modal-section">
+                <h4>Tech Stack</h4>
+                <p>${data.tech}</p>
+            </div>
+            
+            <div class="modal-section">
+                <h4>Key Features</h4>
+                <ul>
+                    ${data.features.map(f => `<li>${f}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h4>Challenge & Solution</h4>
+                <p><strong>문제:</strong> ${data.challenge}</p>
+                <p><strong>해결:</strong> ${data.solution}</p>
+            </div>
+        `;
+
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    };
+
+    document.querySelectorAll('.modal-trigger').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModalById(button.getAttribute('data-id'));
+        });
+    });
+
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.modal-trigger')) return;
+            openModalById(card.getAttribute('data-id'));
         });
     });
 
