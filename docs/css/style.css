@@ -79,8 +79,8 @@ h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
     box-shadow: 0 0 20px var(--accent-glow);
 }
 .btn-primary:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
-.btn-outline { border: 1px solid var(--border-color); color: var(--text-primary); }
-.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-outline { border: 1px solid var(--border-color); color: var(--text-secondary); background: rgba(255, 255, 255, 0.02); }
+.btn-outline:hover { border-color: var(--accent); color: var(--text-primary); background: rgba(255, 255, 255, 0.04); }
 .btn-small { padding: 10px 20px; font-size: 0.9rem; }
 
 /* Hero Section */
